@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explore seven Financial Independence, Retire Early (FIRE) strategies with an interactive retirement calculator." />
+  <meta name="theme-color" content="#10251e" />
+  <title>FIREPath — Retirement Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">F</span><span>FIRE<span class="brand-light">Path</span></span></a>
+    <span class="top-note">A clearer path to financial independence</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR FINANCIAL FUTURE, YOUR WAY</div>
+      <h1>Build your path to<br><span>financial freedom.</span></h1>
+      <p>Compare seven FIRE strategies, estimate your retirement number, and see how your investments could grow over time.</p>
+    </section>
+
+    <section class="strategy-section">
+      <div class="section-heading">
+        <div><span class="step">01</span><h2>Choose your FIRE strategy</h2></div>
+        <span class="section-hint">Switch strategies to compare your goals</span>
+      </div>
+      <div class="strategy-grid" id="strategyGrid"></div>
+      <div class="strategy-description" id="strategyDescription" aria-live="polite"></div>
+    </section>
+
+    <section class="calculator-layout">
+      <div class="input-panel panel">
+        <div class="section-heading compact">
+          <div><span class="step">02</span><h2>Your numbers</h2></div>
+        </div>
+        <p class="panel-intro">Enter your current financial situation. All amounts are in US dollars.</p>
+
+        <div class="field-grid">
+          <label class="field"><span>Current age</span><div class="input-wrap"><input id="currentAge" type="number" min="0" max="100" value="25"><small>years</small></div></label>
+          <label class="field"><span>Target retirement age</span><div class="input-wrap"><input id="retirementAge" type="number" min="1" max="110" value="60"><small>years</small></div></label>
+          <label class="field"><span>Current investments</span><div class="input-wrap"><b>$</b><input id="currentInvestments" type="number" min="0" step="1000" value="50000"></div></label>
+          <label class="field"><span>Monthly investment</span><div class="input-wrap"><b>$</b><input id="monthlyInvestment" type="number" min="0" step="50" value="1500"></div></label>
+          <label class="field full"><span>Desired annual retirement spending</span><div class="input-wrap"><b>$</b><input id="annualSpending" type="number" min="0" step="1000" value="50000"></div><small class="field-help">Your expected yearly expenses in today's dollars, before strategy adjustments.</small></label>
+          <label class="field full conditional hidden" id="baristaIncomeField"><span>Expected annual part-time income</span><div class="input-wrap"><b>$</b><input id="baristaIncome" type="number" min="0" step="1000" value="20000"></div><small class="field-help">Estimated income from part-time work after leaving full-time employment.</small></label>
+        </div>
+
+        <div class="subsection">
+          <h3>Investment assumptions</h3>
+          <label class="range-field"><span>Annual investment return <strong id="returnLabel">7.0%</strong></span><input id="annualReturn" type="range" min="0" max="15" step=".5" value="7"></label>
+          <label class="range-field"><span>Withdrawal rate <strong id="withdrawalLabel">4.0%</strong></span><input id="withdrawalRate" type="range" min="2" max="6" step=".25" value="4"></label>
+          <label class="range-field"><span>Expected inflation <strong id="inflationLabel">2.5%</strong></span><input id="inflationRate" type="range" min="0" max="8" step=".25" value="2.5"></label>
+          <p class="field-help">The calculator uses today's-dollar spending. Inflation is shown as an assumption but is not separately applied to the projection.</p>
+        </div>
+        <button class="reset-button" id="resetButton" type="button">↺ Reset calculator</button>
+      </div>
+
+      <div class="results-column">
+        <section class="results-panel panel">
+          <div class="result-kicker">YOUR ESTIMATED FIRE NUMBER</div>
+          <div class="fire-number" id="fireNumber">$1,250,000</div>
+          <p class="muted" id="fireNumberCaption">Estimated portfolio needed to support your retirement spending.</p>
+          <div class="result-divider"></div>
+          <div class="metrics-grid">
+            <div><span>Current investments</span><strong id="currentValue">$50,000</strong></div>
+            <div><span>Projected at target age</span><strong id="projectedValue">$—</strong></div>
+            <div><span>Years until target age</span><strong id="yearsValue">35</strong></div>
+            <div><span>Estimated FIRE age</span><strong id="fireAgeValue">—</strong></div>
+          </div>
+          <div class="progress-block">
+            <div class="progress-heading"><span>Current progress toward FIRE</span><strong id="currentProgressLabel">4.0%</strong></div>
+            <div class="progress-track"><div id="currentProgressBar" class="progress-fill"></div></div>
+            <p class="muted small" id="remainingText">$1,200,000 remaining to your target</p>
+          </div>
+          <div class="progress-block">
+            <div class="progress-heading"><span>Projected progress at target age</span><strong id="futureProgressLabel">—</strong></div>
+            <div class="progress-track"><div id="futureProgressBar" class="progress-fill future"></div></div>
+            <p class="muted small" id="futureStatus">Based on your investments and monthly contributions.</p>
+          </div>
+        </section>
+
+        <section class="chart-panel panel">
+          <div class="chart-heading"><div><span class="step">03</span><h2>Investment growth</h2></div><span class="chart-legend"><i></i> Portfolio <i class="goal-dot"></i> FIRE target</span></div>
+          <canvas id="growthChart" aria-label="Chart showing projected investments over time compared with the FIRE target"></canvas>
+          <p class="muted small chart-note">Illustrative projection using a constant annual return and monthly contributions. Actual investment returns vary.</p>
+        </section>
+
+        <section class="coast-panel panel hidden" id="coastPanel">
+          <div class="coast-title"><span class="step">04</span><h2>Coast FIRE checkpoint</h2></div>
+          <div class="coast-number" id="coastNumber">$—</div>
+          <p class="muted">The estimated amount you would need invested today for it to grow to your FIRE number by your target retirement age, without adding more money.</p>
+          <div class="coast-status" id="coastStatus"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="strategy-guide">
+      <div class="section-heading"><div><span class="step">05</span><h2>Know your FIRE options</h2></div></div>
+      <div class="guide-grid" id="guideGrid"></div>
+    </section>
+
+    <footer>
+      <div class="brand footer-brand"><span class="brand-mark">F</span><span>FIRE<span class="brand-light">Path</span></span></div>
+      <p>Educational calculator only. Not financial, tax, or investment advice.</p>
+      <p class="disclaimer">The 4% rule is a planning guideline, not a guarantee. Consider taxes, fees, healthcare, market volatility, sequence-of-returns risk, and your personal circumstances before making retirement decisions.</p>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
